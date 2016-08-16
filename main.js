@@ -1,6 +1,16 @@
+/*
+		var zumiraj = function(evt){
+			var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
+			if (delta) zoom(delta);
+			return evt.preventDefault() && false;
+		};
+		canvas.addEventListener('DOMMouseScroll',zumiraj,false);
+		canvas.addEventListener('mousewheel',zumiraj,false);
+*/
+
 /*** KONFIG ***/
 
-var blizina = 0;  // različito od nule pravi perspectivu
+var blizina = 300; // različito od nule pravi perspectivu
 var mishStisnut = false;
 var mishX = 0;
 var mishY = 0;
@@ -8,8 +18,8 @@ var mishY = 0;
 /*** INIT ***/
 
 var canvas = document.getElementById('cnv');
-canvas.width = canvas.offsetWidth;
-canvas.height = canvas.offsetHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 var dx = canvas.width / 2;
 var dy = canvas.height / 2;
 
@@ -30,8 +40,15 @@ autorotate_timeout = setTimeout(autorotate, 2000);
 canvas.addEventListener('mousedown', initMove);
 document.addEventListener('mousemove', pratiMisha);
 document.addEventListener('mouseup', stopMove);
+canvas.addEventListener('DOMMouseScroll',zumiraj);
+
 
 /*** POMOĆNE FUNKCIJE ***/
+
+function zumiraj (evt) {
+  evt.preventDefault();
+  blizina -= evt.detail;
+}
 
 function rotiraj(M, centar, theta, phi) {
   // koeficijenti za matricu rotacije
