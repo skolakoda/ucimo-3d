@@ -1,48 +1,46 @@
+/*** KONFIG ***/
+
+var blizina = 0;  // različito od nule pravi perspectivu
+var mishStisnut = false;
+var mishX = 0;
+var mishY = 0;
 
 /*** INIT ***/
 
-// Fix the canvas width and height
 var canvas = document.getElementById('cnv');
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 var dx = canvas.width / 2;
 var dy = canvas.height / 2;
 
-// Objects style
 var ctx = canvas.getContext('2d');
 ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
 ctx.fillStyle = 'rgba(0, 150, 255, 0.3)';
 
-// Create the kocka
-var centarKocke = new Tacka3D(0, 11 * dy / 10, 0);
+var centarKocke = new Vrh3D(0, 11 * dy / 10, 0);
 var kocka = new Kocka(centarKocke, dy);
-var objects = [kocka];
+var predmeti = [kocka];
 
-// First render
-render(objects, ctx, dx, dy);
-
-// Events
-var mousedown = false;
-var mx = 0;
-var my = 0;
-
-canvas.addEventListener('mousedown', initMove);
-document.addEventListener('mousemove', move);
-document.addEventListener('mouseup', stopMove);
+render(predmeti, ctx, dx, dy, blizina);
 
 autorotate_timeout = setTimeout(autorotate, 2000);
 
+/*** EVENTS ***/
+
+canvas.addEventListener('mousedown', initMove);
+document.addEventListener('mousemove', pratiMisha);
+document.addEventListener('mouseup', stopMove);
 
 /*** POMOĆNE FUNKCIJE ***/
 
-function rotate(M, centar, theta, phi) {
-  // Rotation matrix coefficients
+function rotiraj(M, centar, theta, phi) {
+  // koeficijenti za matricu rotacije
   var ct = Math.cos(theta);
   var st = Math.sin(theta);
   var cp = Math.cos(phi);
   var sp = Math.sin(phi);
 
-  // Rotation
+  // rotacija
   var x = M.x - centar.x;
   var y = M.y - centar.y;
   var z = M.z - centar.z;
@@ -54,33 +52,32 @@ function rotate(M, centar, theta, phi) {
 
 function initMove(evt) {
   clearTimeout(autorotate_timeout);
-  mousedown = true;
-  mx = evt.clientX;
-  my = evt.clientY;
+  mishStisnut = true;
+  mishX = evt.clientX;
+  mishY = evt.clientY;
 }
 
-function move(evt) {
-  if (mousedown) {
-    var theta = (evt.clientX - mx) * Math.PI / 360;
-    var phi = (evt.clientY - my) * Math.PI / 180;
-    for (var i = 0; i < 8; ++i) {
-      rotate(kocka.vertices[i], centarKocke, theta, phi);
-    }
-    mx = evt.clientX;
-    my = evt.clientY;
-    render(objects, ctx, dx, dy);
+function pratiMisha(evt) {
+  if (!mishStisnut) return;
+  var theta = (evt.clientX - mishX) * Math.PI / 360;
+  var phi = (evt.clientY - mishY) * Math.PI / 180;
+  for (var i = 0; i < 8; ++i) {
+    rotiraj(kocka.vrhovi[i], centarKocke, theta, phi);
   }
+  mishX = evt.clientX;
+  mishY = evt.clientY;
+  render(predmeti, ctx, dx, dy, blizina);
 }
 
 function stopMove() {
-  mousedown = false;
+  mishStisnut = false;
   autorotate_timeout = setTimeout(autorotate, 2000);
 }
 
 function autorotate() {
   for (var i = 0; i < 8; ++i) {
-    rotate(kocka.vertices[i], centarKocke, -Math.PI / 720, Math.PI / 720);
+    rotiraj(kocka.vrhovi[i], centarKocke, -Math.PI / 720, Math.PI / 720);
   }
-  render(objects, ctx, dx, dy);
+  render(predmeti, ctx, dx, dy, blizina);
   autorotate_timeout = setTimeout(autorotate, 30);
 }

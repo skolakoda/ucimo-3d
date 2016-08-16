@@ -1,36 +1,36 @@
 /*** KLASE ***/
 
-var Tacka3D = function (x, y, z) {
+var Vrh3D = function (x, y, z) {
   this.x = parseFloat(x);
   this.y = parseFloat(y);
   this.z = parseFloat(z);
 };
 
-var Tacka2D = function (x, y) {
+var Vrh2D = function (x, y) {
   this.x = parseFloat(x);
   this.y = parseFloat(y);
 };
 
 var Kocka = function (centar, side) {
   var polaStrane = side / 2;
-  this.vertices = [
-    new Tacka3D(centar.x - polaStrane, centar.y - polaStrane, centar.z + polaStrane),
-    new Tacka3D(centar.x - polaStrane, centar.y - polaStrane, centar.z - polaStrane),
-    new Tacka3D(centar.x + polaStrane, centar.y - polaStrane, centar.z - polaStrane),
-    new Tacka3D(centar.x + polaStrane, centar.y - polaStrane, centar.z + polaStrane),
-    new Tacka3D(centar.x + polaStrane, centar.y + polaStrane, centar.z + polaStrane),
-    new Tacka3D(centar.x + polaStrane, centar.y + polaStrane, centar.z - polaStrane),
-    new Tacka3D(centar.x - polaStrane, centar.y + polaStrane, centar.z - polaStrane),
-    new Tacka3D(centar.x - polaStrane, centar.y + polaStrane, centar.z + polaStrane)
+  this.vrhovi = [
+    new Vrh3D(centar.x - polaStrane, centar.y - polaStrane, centar.z + polaStrane),
+    new Vrh3D(centar.x - polaStrane, centar.y - polaStrane, centar.z - polaStrane),
+    new Vrh3D(centar.x + polaStrane, centar.y - polaStrane, centar.z - polaStrane),
+    new Vrh3D(centar.x + polaStrane, centar.y - polaStrane, centar.z + polaStrane),
+    new Vrh3D(centar.x + polaStrane, centar.y + polaStrane, centar.z + polaStrane),
+    new Vrh3D(centar.x + polaStrane, centar.y + polaStrane, centar.z - polaStrane),
+    new Vrh3D(centar.x - polaStrane, centar.y + polaStrane, centar.z - polaStrane),
+    new Vrh3D(centar.x - polaStrane, centar.y + polaStrane, centar.z + polaStrane)
   ];
 
   this.stranice = [
-    [this.vertices[0], this.vertices[1], this.vertices[2], this.vertices[3]],
-    [this.vertices[3], this.vertices[2], this.vertices[5], this.vertices[4]],
-    [this.vertices[4], this.vertices[5], this.vertices[6], this.vertices[7]],
-    [this.vertices[7], this.vertices[6], this.vertices[1], this.vertices[0]],
-    [this.vertices[7], this.vertices[0], this.vertices[3], this.vertices[4]],
-    [this.vertices[1], this.vertices[6], this.vertices[5], this.vertices[2]]
+    [this.vrhovi[0], this.vrhovi[1], this.vrhovi[2], this.vrhovi[3]],
+    [this.vrhovi[3], this.vrhovi[2], this.vrhovi[5], this.vrhovi[4]],
+    [this.vrhovi[4], this.vrhovi[5], this.vrhovi[6], this.vrhovi[7]],
+    [this.vrhovi[7], this.vrhovi[6], this.vrhovi[1], this.vrhovi[0]],
+    [this.vrhovi[7], this.vrhovi[0], this.vrhovi[3], this.vrhovi[4]],
+    [this.vrhovi[1], this.vrhovi[6], this.vrhovi[5], this.vrhovi[2]]
   ];
 };
 
@@ -38,29 +38,24 @@ var Kocka = function (centar, side) {
 /*** FUNKCIJE ***/
 
 /*
-  prima listu objekata za render
-  moraju imati property 'stranice', koji sadrzi niz stranica predmeta
+  prima niz predmeta
+  predmet.stranice mora biti niz stranica
 */
 
-function render(objects, ctx, dx, dy) {
-  // Clear the previous frame
+function render(predmeti, ctx, dx, dy, blizina) {
   ctx.clearRect(0, 0, 2 * dx, 2 * dy);
-  // For each object
-  for (var i = 0, n_obj = objects.length; i < n_obj; ++i) {
-    // For each stranica
-    for (var j = 0, n_faces = objects[i].stranice.length; j < n_faces; ++j) {
-      // Current stranica
-      var stranica = objects[i].stranice[j];
-      // Draw the first vertex
-      var P = project(stranica[0]);
+  for (var i = 0; i < predmeti.length; ++i) {
+    for (var j = 0; j < predmeti[i].stranice.length; ++j) {
+      var stranica = predmeti[i].stranice[j];
+      // crta prvi vrh
+      var P = project(stranica[0], blizina);
       ctx.beginPath();
       ctx.moveTo(P.x + dx, -P.y + dy);
-      // Draw the other vertices
-      for (var k = 1, n_vertices = stranica.length; k < n_vertices; ++k) {
-        P = project(stranica[k]);
+      // crta ostale vrhove
+      for (var k = 1; k < stranica.length; ++k) {
+        P = project(stranica[k], blizina);
         ctx.lineTo(P.x + dx, -P.y + dy);
       }
-      // Close the path and draw the stranica
       ctx.closePath();
       ctx.stroke();
       ctx.fill();
@@ -68,6 +63,8 @@ function render(objects, ctx, dx, dy) {
   }
 }
 
-function project(M) {
-  return new Tacka2D(M.x, M.z);
+function project(M, blizina) {
+  if (!blizina) return new Vrh2D(M.x, M.z);
+  var r = blizina / M.y;
+  return new Vrh2D(r * M.x, r * M.z);
 }
