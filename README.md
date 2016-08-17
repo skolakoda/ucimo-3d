@@ -1,6 +1,6 @@
 # Učimo 3D
 
-Mini 3D engine, napravljen u `Javascriptu`. Vrši projekciju `3D` prostora u `2D`. Podržava ortogonalnu i perspektivnu projekciju.
+Mini 3D engine, napravljen u Javascriptu. Vrši projekciju `3D` prostora u `2D`. Podržava ortogonalnu i perspektivnu projekciju.
 
 Ne koristi nikakvu biblioteku, niti `WebGL` tehnologiju, samo običan `canvas`.
 
