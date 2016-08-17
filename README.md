@@ -10,7 +10,7 @@ Napravljeno po članku: [Building a 3D Engine with JavaScript](https://www.sitep
 
 Nikakva instalacija nije potrebna, samo skineš projekat i otvoriš `index.html`.
 
-## Dokumentacija
+## Razvoj
 
 Engine koristi neuobičajenu konvenciju, `z` osa je uspravno, a `y` po dubini.
 
