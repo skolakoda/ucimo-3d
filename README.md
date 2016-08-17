@@ -12,7 +12,6 @@ Nikakva instalacija nije potrebna, samo skineš projekat i otvoriš `index.html`
 
 ## Razvoj
 
-Engine ima neobičnu konvenciju, `z` osa je uspravno, a `y` po dubini.
-
+Engine koristi neuobičajenu konvenciju, `z` osa je uspravno, a `y` po dubini.
 
 ![3d-kocka](https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2016/02/1454758168cube.png)
