@@ -24,8 +24,7 @@ var Kocka = function (centar, side) {
     new Vrh3D(centar.x - polaStrane, centar.y + polaStrane, centar.z + polaStrane)
   ];
 
-  // svaka stranica je kvadrat sa četiri vrha
-  // I represent a face with an array but you could create a dedicated class for that
+  // svaka stranica kocke je niz sa četiri vrha
   this.stranice = [
     [this.vrhovi[0], this.vrhovi[1], this.vrhovi[2], this.vrhovi[3]],
     [this.vrhovi[3], this.vrhovi[2], this.vrhovi[5], this.vrhovi[4]],
@@ -39,29 +38,24 @@ var Kocka = function (centar, side) {
 
 /*** FUNKCIJE ***/
 
-/*
-  prima niz predmeta
-  predmet.stranice mora biti niz stranica
-*/
+// predmet.stranice je niz nizova
 
-function render(nizPredmeta, podloga, centarPlatnaX, centarPlatnaY, perspektiva) {
+function render(predmet, podloga, centarPlatnaX, centarPlatnaY, perspektiva) {
   podloga.clearRect(0, 0, 2 * centarPlatnaX, 2 * centarPlatnaY);
-  for (var i = 0; i < nizPredmeta.length; ++i) {
-    for (var j = 0; j < nizPredmeta[i].stranice.length; ++j) {
-      var stranica = nizPredmeta[i].stranice[j];
-      // crta prvi vrh
-      var vrh2D = projektuj(stranica[0], perspektiva);
-      podloga.beginPath();
-      podloga.moveTo(vrh2D.x + centarPlatnaX, -vrh2D.y + centarPlatnaY);
-      // crta ostale vrhove
-      for (var k = 1; k < stranica.length; ++k) {
-        vrh2D = projektuj(stranica[k], perspektiva);
-        podloga.lineTo(vrh2D.x + centarPlatnaX, -vrh2D.y + centarPlatnaY);
-      }
-      podloga.closePath();
-      podloga.stroke();
-      podloga.fill();
+  for (var i = 0; i < predmet.stranice.length; ++i) {
+    var tekucaStranica = predmet.stranice[i];
+
+    var vrh2D = projektuj(tekucaStranica[0], perspektiva);
+    podloga.beginPath();
+    podloga.moveTo(vrh2D.x + centarPlatnaX, -vrh2D.y + centarPlatnaY);
+
+    for (var j = 1; j < tekucaStranica.length; ++j) {
+      vrh2D = projektuj(tekucaStranica[j], perspektiva);
+      podloga.lineTo(vrh2D.x + centarPlatnaX, -vrh2D.y + centarPlatnaY);
     }
+    podloga.closePath();
+    podloga.stroke();
+    podloga.fill();
   }
 }
 

@@ -19,9 +19,8 @@ podloga.fillStyle = 'rgba(0, 150, 255, 0.3)';
 
 var centarKocke = new Vrh3D(0, 11 * centarPlatnaY / 10, 0);
 var kocka = new Kocka(centarKocke, centarPlatnaY);
-var nizPredmeta = [kocka];
 
-render(nizPredmeta, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
+render(kocka, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 
 
 /*** EVENTS ***/
@@ -65,7 +64,7 @@ function pratiMisha(evt) {
     rotiraj(kocka.vrhovi[i], centarKocke, ugaoVodoravno, ugaoUspravno);
   }
   azurirajMisha(evt);
-  render(nizPredmeta, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
+  render(kocka, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 }
 
 function pocniVuchu(evt) {
@@ -81,5 +80,5 @@ function azurirajMisha(evt) {
 function zumiraj(evt) {
   evt.preventDefault();
   perspektiva -= evt.detail;
-  render(nizPredmeta, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
+  render(kocka, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 }
