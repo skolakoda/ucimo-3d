@@ -1,6 +1,8 @@
 # Učimo 3D
 
-![3d-kocka](ucimo-3d/img/3d-kocka.png )
+![3d-kocka](ucimo-3d/img/3d-kocka.png)
+
+![3d-kocka](https://raw.githubusercontent.com/skolakoda/ucimo-3d/img/3d-kocka.png)
 
 Mini 3D engine, napravljen u Javascriptu. Vrši projekciju `3D` prostora u `2D`. Podržava ortogonalnu i perspektivnu projekciju.
 
