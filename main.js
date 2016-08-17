@@ -9,42 +9,40 @@ var mishY = 0;
 
 /*** INIT ***/
 
-var canvas = document.getElementById('cnv');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-var dx = canvas.width / 2;
-var dy = canvas.height / 2;
+var platno = document.getElementById('cnv');
+platno.width = window.innerWidth;
+platno.height = window.innerHeight;
+var centarPlatnaX = platno.width / 2;
+var centarPlatnaY = platno.height / 2;
 
-var ctx = canvas.getContext('2d');
-ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-ctx.fillStyle = 'rgba(0, 150, 255, 0.3)';
+var podloga = platno.getContext('2d');
+podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+podloga.fillStyle = 'rgba(0, 150, 255, 0.3)';
 
-var centarKocke = new Vrh3D(0, 11 * dy / 10, 0);
-var kocka = new Kocka(centarKocke, dy);
+var centarKocke = new Vrh3D(0, 11 * centarPlatnaY / 10, 0);
+var kocka = new Kocka(centarKocke, centarPlatnaY);
 var predmeti = [kocka];
 
-render(predmeti, ctx, dx, dy, perspektiva);
+render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 
-autorotate_timeout = setTimeout(autorotate, 2000);
 
 /*** EVENTS ***/
 
-canvas.addEventListener('mousedown', initMove);
+platno.addEventListener('mousedown', initMove);
 document.addEventListener('mousemove', pratiMisha);
 document.addEventListener('mouseup', stopMove);
-canvas.addEventListener('DOMMouseScroll', zumiraj);
+if (perspektiva) platno.addEventListener('DOMMouseScroll',zumiraj);
 
 
 /*** POMOĆNE FUNKCIJE ***/
 
-function zumiraj(evt) {
+function zumiraj (evt) {
   evt.preventDefault();
   perspektiva -= evt.detail;
+  render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 }
 
-function rotiraj(vrh3D, centar) {
-  var theta = -Math.PI / 720;
-  var phi = Math.PI / 720;
+function rotiraj(vrh3D, centar, theta, phi) {
   // koeficijenti za matricu rotacije
   var ct = Math.cos(theta);
   var st = Math.sin(theta);
@@ -62,14 +60,14 @@ function rotiraj(vrh3D, centar) {
 }
 
 function initMove(evt) {
-  clearTimeout(autorotate_timeout);
-  mishStisnut = true;
   mishX = evt.clientX;
   mishY = evt.clientY;
+  mishStisnut = true;
 }
 
 function pratiMisha(evt) {
   if (!mishStisnut) return;
+
   var theta = (evt.clientX - mishX) * Math.PI / 360;
   var phi = (evt.clientY - mishY) * Math.PI / 180;
   for (var i = 0; i < 8; ++i) {
@@ -77,18 +75,9 @@ function pratiMisha(evt) {
   }
   mishX = evt.clientX;
   mishY = evt.clientY;
-  render(predmeti, ctx, dx, dy, perspektiva);
+  render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 }
 
 function stopMove() {
   mishStisnut = false;
-  autorotate_timeout = setTimeout(autorotate, 2000);
-}
-
-function autorotate() {
-  for (var i = 0; i < kocka.vrhovi.length; ++i) {
-    rotiraj(kocka.vrhovi[i], centarKocke);
-  }
-  render(predmeti, ctx, dx, dy, perspektiva);
-  autorotate_timeout = setTimeout(autorotate, 30);
 }
