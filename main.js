@@ -1,5 +1,3 @@
-// ima neobičnu konvenciju, z osa je uspravno, a y po dubini
-
 /*** KONFIG ***/
 
 var perspektiva = 0; // ako je različito od nule pravi perspectivu
