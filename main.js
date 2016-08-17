@@ -10,7 +10,7 @@
 
 /*** KONFIG ***/
 
-var blizina = 300; // različito od nule pravi perspectivu
+var perspektiva = 300; // ako je različito od nule pravi perspectivu
 var mishStisnut = false;
 var mishX = 0;
 var mishY = 0;
@@ -31,7 +31,7 @@ var centarKocke = new Vrh3D(0, 11 * dy / 10, 0);
 var kocka = new Kocka(centarKocke, dy);
 var predmeti = [kocka];
 
-render(predmeti, ctx, dx, dy, blizina);
+render(predmeti, ctx, dx, dy, perspektiva);
 
 autorotate_timeout = setTimeout(autorotate, 2000);
 
@@ -47,10 +47,12 @@ canvas.addEventListener('DOMMouseScroll',zumiraj);
 
 function zumiraj (evt) {
   evt.preventDefault();
-  blizina -= evt.detail;
+  perspektiva -= evt.detail;
 }
 
-function rotiraj(M, centar, theta, phi) {
+function rotiraj(vrh3D, centar) {
+  var theta = -Math.PI / 720;
+  var phi = Math.PI / 720;
   // koeficijenti za matricu rotacije
   var ct = Math.cos(theta);
   var st = Math.sin(theta);
@@ -58,13 +60,13 @@ function rotiraj(M, centar, theta, phi) {
   var sp = Math.sin(phi);
 
   // rotacija
-  var x = M.x - centar.x;
-  var y = M.y - centar.y;
-  var z = M.z - centar.z;
+  var x = vrh3D.x - centar.x;
+  var y = vrh3D.y - centar.y;
+  var z = vrh3D.z - centar.z;
 
-  M.x = ct * x - st * cp * y + st * sp * z + centar.x;
-  M.y = st * x + ct * cp * y - ct * sp * z + centar.y;
-  M.z = sp * y + cp * z + centar.z;
+  vrh3D.x = ct * x - st * cp * y + st * sp * z + centar.x;
+  vrh3D.y = st * x + ct * cp * y - ct * sp * z + centar.y;
+  vrh3D.z = sp * y + cp * z + centar.z;
 }
 
 function initMove(evt) {
@@ -83,7 +85,7 @@ function pratiMisha(evt) {
   }
   mishX = evt.clientX;
   mishY = evt.clientY;
-  render(predmeti, ctx, dx, dy, blizina);
+  render(predmeti, ctx, dx, dy, perspektiva);
 }
 
 function stopMove() {
@@ -92,9 +94,9 @@ function stopMove() {
 }
 
 function autorotate() {
-  for (var i = 0; i < 8; ++i) {
-    rotiraj(kocka.vrhovi[i], centarKocke, -Math.PI / 720, Math.PI / 720);
+  for (var i = 0; i < kocka.vrhovi.length; ++i) {
+    rotiraj(kocka.vrhovi[i], centarKocke);
   }
-  render(predmeti, ctx, dx, dy, blizina);
+  render(predmeti, ctx, dx, dy, perspektiva);
   autorotate_timeout = setTimeout(autorotate, 30);
 }
