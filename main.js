@@ -1,9 +1,9 @@
 /*** KONFIG ***/
 
-var perspektiva = 0; // ako je različito od nule pravi perspectivu
+var zapamcenMishX = 0;
+var zapamcenMishY = 0;
 var mishStisnut = false;
-var mishX = 0;
-var mishY = 0;
+var perspektiva = 0; // ako je različito od nule pravi perspectivu
 
 /*** INIT ***/
 
@@ -26,26 +26,25 @@ render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 
 /*** EVENTS ***/
 
-platno.addEventListener('mousedown', initMove);
+platno.addEventListener('mousedown', pocniVuchu);
+
 document.addEventListener('mousemove', pratiMisha);
-document.addEventListener('mouseup', stopMove);
-if (perspektiva) platno.addEventListener('DOMMouseScroll',zumiraj);
+
+document.addEventListener('mouseup', function () {
+  mishStisnut = false;
+});
+
+if (perspektiva) platno.addEventListener('DOMMouseScroll', zumiraj);
 
 
-/*** POMOĆNE FUNKCIJE ***/
+/*** FUNKCIJE ***/
 
-function zumiraj (evt) {
-  evt.preventDefault();
-  perspektiva -= evt.detail;
-  render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
-}
-
-function rotiraj(vrh3D, centar, theta, phi) {
+function rotiraj(vrh3D, centar, ugaoVodoravno, ugaoUspravno) {
   // koeficijenti za matricu rotacije
-  var ct = Math.cos(theta);
-  var st = Math.sin(theta);
-  var cp = Math.cos(phi);
-  var sp = Math.sin(phi);
+  var ct = Math.cos(ugaoVodoravno);
+  var st = Math.sin(ugaoVodoravno);
+  var cp = Math.cos(ugaoUspravno);
+  var sp = Math.sin(ugaoUspravno);
 
   // rotacija
   var x = vrh3D.x - centar.x;
@@ -57,25 +56,30 @@ function rotiraj(vrh3D, centar, theta, phi) {
   vrh3D.z = sp * y + cp * z + centar.z;
 }
 
-function initMove(evt) {
-  mishX = evt.clientX;
-  mishY = evt.clientY;
-  mishStisnut = true;
-}
-
 function pratiMisha(evt) {
   if (!mishStisnut) return;
 
-  var theta = (evt.clientX - mishX) * Math.PI / 360;
-  var phi = (evt.clientY - mishY) * Math.PI / 180;
-  for (var i = 0; i < 8; ++i) {
-    rotiraj(kocka.vrhovi[i], centarKocke, theta, phi);
+  var ugaoVodoravno = (evt.clientX - zapamcenMishX) * Math.PI / 360;
+  var ugaoUspravno = (evt.clientY - zapamcenMishY) * Math.PI / 180;
+  for (var i = 0; i < kocka.vrhovi.length; ++i) {
+    rotiraj(kocka.vrhovi[i], centarKocke, ugaoVodoravno, ugaoUspravno);
   }
-  mishX = evt.clientX;
-  mishY = evt.clientY;
+  azurirajMisha(evt);
   render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 }
 
-function stopMove() {
-  mishStisnut = false;
+function pocniVuchu(evt) {
+  azurirajMisha(evt);
+  mishStisnut = true;
+}
+
+function azurirajMisha(evt) {
+  zapamcenMishX = evt.clientX;
+  zapamcenMishY = evt.clientY;
+}
+
+function zumiraj(evt) {
+  evt.preventDefault();
+  perspektiva -= evt.detail;
+  render(predmeti, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
 }
