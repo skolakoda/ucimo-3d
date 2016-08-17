@@ -1,16 +1,8 @@
-/*
-		var zumiraj = function(evt){
-			var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
-			if (delta) zoom(delta);
-			return evt.preventDefault() && false;
-		};
-		canvas.addEventListener('DOMMouseScroll',zumiraj,false);
-		canvas.addEventListener('mousewheel',zumiraj,false);
-*/
+// ima neobičnu konvenciju, z osa je uspravno, a y po dubini
 
 /*** KONFIG ***/
 
-var perspektiva = 300; // ako je različito od nule pravi perspectivu
+var perspektiva = 0; // ako je različito od nule pravi perspectivu
 var mishStisnut = false;
 var mishX = 0;
 var mishY = 0;
@@ -40,12 +32,12 @@ autorotate_timeout = setTimeout(autorotate, 2000);
 canvas.addEventListener('mousedown', initMove);
 document.addEventListener('mousemove', pratiMisha);
 document.addEventListener('mouseup', stopMove);
-canvas.addEventListener('DOMMouseScroll',zumiraj);
+canvas.addEventListener('DOMMouseScroll', zumiraj);
 
 
 /*** POMOĆNE FUNKCIJE ***/
 
-function zumiraj (evt) {
+function zumiraj(evt) {
   evt.preventDefault();
   perspektiva -= evt.detail;
 }
