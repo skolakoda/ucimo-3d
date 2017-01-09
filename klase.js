@@ -19,7 +19,7 @@ class Vrh3D extends Vrh2D {
 */
 class Kocka {
   constructor(centar, duzinaStrane) {
-    var polaStrane = duzinaStrane / 2
+    const polaStrane = duzinaStrane / 2
     this.vrhovi = [
       new Vrh3D(centar.x - polaStrane, centar.y - polaStrane, centar.z + polaStrane),
       new Vrh3D(centar.x - polaStrane, centar.y - polaStrane, centar.z - polaStrane),
@@ -31,8 +31,8 @@ class Kocka {
       new Vrh3D(centar.x - polaStrane, centar.y + polaStrane, centar.z + polaStrane)
     ]
 
-    // svaka stranica je niz sa četiri vrha
-    this.stranice = [
+    // svako lice je niz četiri vrha
+    this.lica = [
       [this.vrhovi[0], this.vrhovi[1], this.vrhovi[2], this.vrhovi[3]],
       [this.vrhovi[3], this.vrhovi[2], this.vrhovi[5], this.vrhovi[4]],
       [this.vrhovi[4], this.vrhovi[5], this.vrhovi[6], this.vrhovi[7]],

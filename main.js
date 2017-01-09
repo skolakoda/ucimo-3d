@@ -2,9 +2,9 @@
 
 /** KONFIG **/
 
-let perspektiva = 0 // ako nije nula pravi perspectivu, inace ortogonalno
-let zapamcenMishX = 0
-let zapamcenMishY = 0
+let perspektiva = 0 // razlicito od nule perspectiva, inace ortogonalno
+let prosloMishX = 0
+let prosloMishY = 0
 let mishStisnut = false
 
 /** INIT **/
@@ -24,23 +24,21 @@ const kocka = new Kocka(centar, platno.height / 2)
 
 const projektuj = function (vrh3D, perspektiva) {
   if (perspektiva === 0) return new Vrh2D(vrh3D.x, vrh3D.z)
-  var r = perspektiva / vrh3D.y
-  return new Vrh2D(r * vrh3D.x, r * vrh3D.z)
+  const mofifikator = perspektiva / vrh3D.y
+  return new Vrh2D(mofifikator * vrh3D.x, mofifikator * vrh3D.z)
 }
 
-/* @param telo.stranice: niz nizova */
+/* @param telo.lica: niz nizova */
 const render = function (telo, platno, perspektiva) {
   const podloga = platno.getContext('2d')
   podloga.clearRect(0, 0, platno.width, 2 * platno.height / 2)
-  for (var i = 0; i < telo.stranice.length; ++i) {
-    var tekucaStranica = telo.stranice[i]
-
-    var vrh2D = projektuj(tekucaStranica[0], perspektiva)
+  for (let i = 0; i < telo.lica.length; ++i) {
+    const lice = telo.lica[i]
+    let vrh2D = projektuj(lice[0], perspektiva)
     podloga.beginPath()
     podloga.moveTo(vrh2D.x + platno.width / 2, -vrh2D.y + platno.height / 2)
-
-    for (var j = 1; j < tekucaStranica.length; ++j) {
-      vrh2D = projektuj(tekucaStranica[j], perspektiva)
+    for (let j = 1; j < lice.length; ++j) {
+      vrh2D = projektuj(lice[j], perspektiva)
       podloga.lineTo(vrh2D.x + platno.width / 2, -vrh2D.y + platno.height / 2)
     }
     podloga.closePath()
@@ -68,9 +66,8 @@ const rotiraj = function (vrh3D, centar, ugaoVodoravno, ugaoUspravno) {
 
 const pratiMisha = function (event) {
   if (!mishStisnut) return
-
-  const ugaoVodoravno = (event.clientX - zapamcenMishX) * Math.PI / 360
-  const ugaoUspravno = (event.clientY - zapamcenMishY) * Math.PI / 180
+  const ugaoVodoravno = (event.clientX - prosloMishX) * Math.PI / 360
+  const ugaoUspravno = (event.clientY - prosloMishY) * Math.PI / 180
   for (let i = 0; i < kocka.vrhovi.length; ++i) {
     rotiraj(kocka.vrhovi[i], centar, ugaoVodoravno, ugaoUspravno)
   }
@@ -84,8 +81,8 @@ const pocniVuchu = function (event) {
 }
 
 const azurirajMisha = function (event) {
-  zapamcenMishX = event.clientX
-  zapamcenMishY = event.clientY
+  prosloMishX = event.clientX
+  prosloMishY = event.clientY
 }
 
 const zumiraj = function (event) {
