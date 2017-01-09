@@ -31,9 +31,9 @@ const render = telo => {
   for (let i = 0; i < telo.lica.length; ++i) {
     const lice = telo.lica[i]
     podloga.beginPath()
-    podloga.moveTo(lice[0].x + sirina / 2, -lice[0].y + visina / 2)
+    podloga.moveTo(lice[0].x, lice[0].y)
     for (let j = 1; j < lice.length; ++j) {
-      podloga.lineTo(lice[j].x + sirina / 2, -lice[j].y + visina / 2)
+      podloga.lineTo(lice[j].x, lice[j].y)
     }
     podloga.closePath()
     podloga.stroke()
