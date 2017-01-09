@@ -18,7 +18,8 @@ class Crtac {
 
   /*
    @param lica: niz nizova
-   uproscena, ne prati mish lepo
+   'lica' can be anything (square, triangle, dodecagon): they just need to be arrays of vertices.
+   uproscena metoda, ne prati mish lepo.
   */
   crtaLica(lica) {
     this.podloga.clearRect(0, 0, this.platno.width, this.platno.height)
@@ -36,15 +37,18 @@ class Crtac {
   }
 
   crtaLica2(lica, perspektiva) {
-    this.podloga.clearRect(0, 0, this.platno.width, this.platno.height)
+    const sirina = this.platno.width
+    const visina = this.platno.height
+    this.podloga.clearRect(0, 0, sirina, visina)
     for (let i = 0; i < lica.length; ++i) {
       const lice = lica[i]
       const prviVrh = perspektiva ? this.projektuj(lice[0], perspektiva) : lice[0]
       this.podloga.beginPath()
-      this.podloga.moveTo(prviVrh.x + this.platno.width / 2, -prviVrh.y + this.platno.height / 2)
+      // koristimo -y jer nisu isti koordinatni sistemi za model i platno
+      this.podloga.moveTo(prviVrh.x + sirina / 2, -prviVrh.y + visina / 2)
       for (let j = 1; j < lice.length; ++j) {
-        const vrh2D = perspektiva ? this.projektuj(lice[j], perspektiva) : lice[j]
-        this.podloga.lineTo(vrh2D.x + this.platno.width / 2, -vrh2D.y + this.platno.height / 2)
+        const vrh = perspektiva ? this.projektuj(lice[j], perspektiva) : lice[j]
+        this.podloga.lineTo(vrh.x + sirina / 2, -vrh.y + visina / 2)
       }
       this.podloga.closePath()
       this.podloga.stroke()
