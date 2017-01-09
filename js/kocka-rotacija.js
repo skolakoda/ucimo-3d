@@ -43,19 +43,19 @@ const render = telo => {
 
 const rotiraj = function (tacka, centar, pomakX, pomakY) {
   // koeficijenti za matricu rotacije
-  const ct = Math.cos(pomakX)
-  const st = Math.sin(pomakX)
-  const cp = Math.cos(pomakY)
-  const sp = Math.sin(pomakY)
+  const cosX = Math.cos(pomakX)
+  const sinX = Math.sin(pomakX)
+  const cosY = Math.cos(pomakY)
+  const sinY = Math.sin(pomakY)
 
   // rotacija
   const x = tacka.x - centar.x
   const y = tacka.y - centar.y
   const z = tacka.z - centar.z
 
-  tacka.x = ct * x - st * cp * y + st * sp * z + centar.x
-  tacka.y = st * x + ct * cp * y - ct * sp * z + centar.y
-  tacka.z = sp * y + cp * z + centar.z
+  tacka.x = cosX * x - sinX * cosY * y + sinX * sinY * z + centar.x
+  tacka.y = sinX * x + cosX * cosY * y - cosX * sinY * z + centar.y
+  tacka.z = sinY * y + cosY * z + centar.z
 }
 
 const pratiMisha = function (e) {
