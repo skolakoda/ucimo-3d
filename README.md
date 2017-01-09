@@ -10,7 +10,7 @@ Napravljeno po članku: [Building a 3D Engine with JavaScript](https://www.sitep
 
 Nikakva instalacija nije potrebna, samo skineš projekat i otvoriš `index.html`.
 
-## Napomena
+## Koordinate
 
 Engine koristi konvenciju da je `z` osa uspravno, a `y` po dubini.
 

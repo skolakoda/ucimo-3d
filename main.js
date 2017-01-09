@@ -7,7 +7,7 @@ var perspektiva = 0; // ako je različito od nule pravi perspectivu
 
 /*** INIT ***/
 
-var platno = document.getElementById('cnv');
+var platno = document.getElementById('canvas');
 platno.width = window.innerWidth;
 platno.height = window.innerHeight;
 var centarPlatnaX = platno.width / 2;
