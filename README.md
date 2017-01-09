@@ -1,4 +1,4 @@
-# Učimo 3D
+# Učimo 3D projekciju
 
 Mini 3D engine, napravljen u Javascriptu. Vrši projekciju `3D` prostora u `2D`. Podržava ortogonalnu i perspektivnu projekciju.
 
