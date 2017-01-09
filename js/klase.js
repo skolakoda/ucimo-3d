@@ -19,16 +19,16 @@ class Vrh3D extends Vrh2D {
 */
 class Kocka {
   constructor(centar, duzinaStrane) {
-    const polaStrane = duzinaStrane / 2
+    const pola = duzinaStrane / 2
     this.vrhovi = [
-      new Vrh3D(centar.x - polaStrane, centar.y - polaStrane, centar.z + polaStrane),
-      new Vrh3D(centar.x - polaStrane, centar.y - polaStrane, centar.z - polaStrane),
-      new Vrh3D(centar.x + polaStrane, centar.y - polaStrane, centar.z - polaStrane),
-      new Vrh3D(centar.x + polaStrane, centar.y - polaStrane, centar.z + polaStrane),
-      new Vrh3D(centar.x + polaStrane, centar.y + polaStrane, centar.z + polaStrane),
-      new Vrh3D(centar.x + polaStrane, centar.y + polaStrane, centar.z - polaStrane),
-      new Vrh3D(centar.x - polaStrane, centar.y + polaStrane, centar.z - polaStrane),
-      new Vrh3D(centar.x - polaStrane, centar.y + polaStrane, centar.z + polaStrane)
+      new Vrh3D(centar.x - pola, centar.y - pola, centar.z + pola),
+      new Vrh3D(centar.x - pola, centar.y - pola, centar.z - pola),
+      new Vrh3D(centar.x + pola, centar.y - pola, centar.z - pola),
+      new Vrh3D(centar.x + pola, centar.y - pola, centar.z + pola),
+      new Vrh3D(centar.x + pola, centar.y + pola, centar.z + pola),
+      new Vrh3D(centar.x + pola, centar.y + pola, centar.z - pola),
+      new Vrh3D(centar.x - pola, centar.y + pola, centar.z - pola),
+      new Vrh3D(centar.x - pola, centar.y + pola, centar.z + pola)
     ]
 
     // svako lice je niz četiri vrha

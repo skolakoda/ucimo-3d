@@ -25,11 +25,11 @@ podloga.fillStyle = 'rgba(0, 150, 255, 0.3)'
 
 /** FUNKCIJE **/
 
-/* @param telo.lica: niz nizova */
-const render = telo => {
+/* @param lica: niz nizova */
+const render = lica => {
   podloga.clearRect(0, 0, sirina, visina)
-  for (let i = 0; i < telo.lica.length; ++i) {
-    const lice = telo.lica[i]
+  for (let i = 0; i < lica.length; ++i) {
+    const lice = lica[i]
     podloga.beginPath()
     podloga.moveTo(lice[0].x, lice[0].y)
     for (let j = 1; j < lice.length; ++j) {
@@ -41,7 +41,7 @@ const render = telo => {
   }
 }
 
-const rotiraj = function (tacka, centar, pomakX, pomakY) {
+const rotiraj = function (vrh, centar, pomakX, pomakY) {
   // koeficijenti za matricu rotacije
   const cosX = Math.cos(pomakX)
   const sinX = Math.sin(pomakX)
@@ -49,13 +49,13 @@ const rotiraj = function (tacka, centar, pomakX, pomakY) {
   const sinY = Math.sin(pomakY)
 
   // rotacija
-  const x = tacka.x - centar.x
-  const y = tacka.y - centar.y
-  const z = tacka.z - centar.z
+  const x = vrh.x - centar.x
+  const y = vrh.y - centar.y
+  const z = vrh.z - centar.z
 
-  tacka.x = cosX * x - sinX * cosY * y + sinX * sinY * z + centar.x
-  tacka.y = sinX * x + cosX * cosY * y - cosX * sinY * z + centar.y
-  tacka.z = sinY * y + cosY * z + centar.z
+  vrh.x = cosX * x - sinX * cosY * y + sinX * sinY * z + centar.x
+  vrh.y = sinX * x + cosX * cosY * y - cosX * sinY * z + centar.y
+  vrh.z = sinY * y + cosY * z + centar.z
 }
 
 const pratiMisha = function (e) {
@@ -66,7 +66,7 @@ const pratiMisha = function (e) {
     rotiraj(kocka.vrhovi[i], centar, pomakX, pomakY)
   }
   azurirajMisha(e)
-  render(kocka, platno)
+  render(kocka.lica)
 }
 
 const pocniVuchu = function (e) {
@@ -81,7 +81,7 @@ const azurirajMisha = function (e) {
 
 /** EXEC **/
 
-render(kocka, platno)
+render(kocka.lica)
 
 /** EVENTS **/
 
