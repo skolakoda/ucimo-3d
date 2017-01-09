@@ -1,4 +1,4 @@
-/* global Vrh2D, Vrh, Kocka */
+/* global Vrh, Kocka, Crtac */
 
 /** KONFIG **/
 
@@ -21,35 +21,11 @@ const podloga = platno.getContext('2d')
 podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)'
 podloga.fillStyle = 'rgba(0, 150, 255, 0.3)'
 
-const centar = new Vrh(0, platno.height / 2, 0)
+const centar = new Vrh(0, visina / 2, 0)
 const kocka = new Kocka(centar, visina / 2)
+const crtac = new Crtac(platno)
 
 /** FUNKCIJE **/
-
-const projektuj = function (vrh, perspektiva) {
-  if (perspektiva === 0) return new Vrh2D(vrh.x, vrh.z)
-  const mofifikator = perspektiva / vrh.y
-  return new Vrh2D(mofifikator * vrh.x, mofifikator * vrh.z)
-}
-
-/* @param telo.lica: niz nizova */
-const render = function (telo, platno, perspektiva) {
-  const podloga = platno.getContext('2d')
-  podloga.clearRect(0, 0, platno.width, platno.height)
-  for (let i = 0; i < telo.lica.length; ++i) {
-    const lice = telo.lica[i]
-    let vrh2D = projektuj(lice[0], perspektiva)
-    podloga.beginPath()
-    podloga.moveTo(vrh2D.x + platno.width / 2, -vrh2D.y + platno.height / 2)
-    for (let j = 1; j < lice.length; ++j) {
-      vrh2D = projektuj(lice[j], perspektiva)
-      podloga.lineTo(vrh2D.x + platno.width / 2, -vrh2D.y + platno.height / 2)
-    }
-    podloga.closePath()
-    podloga.stroke()
-    podloga.fill()
-  }
-}
 
 const rotiraj = function (vrh, centar, pomakX, pomakY) {
   // koeficijenti za matricu rotacije
@@ -76,7 +52,7 @@ const pratiMisha = function (e) {
     rotiraj(kocka.vrhovi[i], centar, pomakX, pomakY)
   }
   azurirajMisha(e)
-  render(kocka, platno, perspektiva)
+  crtac.crtaLica2(kocka.lica, perspektiva)
 }
 
 const pocniVuchu = function (e) {
@@ -92,19 +68,17 @@ const azurirajMisha = function (e) {
 const zumiraj = function (e) {
   e.preventDefault()
   perspektiva -= e.detail
-  render(kocka, platno, perspektiva)
+  crtac.crtaLica2(kocka.lica, perspektiva)
 }
 
 /** EXEC **/
 
-render(kocka, platno, perspektiva)
+crtac.crtaLica2(kocka.lica, perspektiva)
 
 /** EVENTS **/
 
 platno.addEventListener('mousedown', pocniVuchu)
-
 document.addEventListener('mousemove', pratiMisha)
-
 document.addEventListener('mouseup', () => mishStisnut = false)
 
 if (perspektiva) platno.addEventListener('DOMMouseScroll', zumiraj)

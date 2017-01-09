@@ -1,4 +1,4 @@
-/* global Vrh, Kocka */
+/* global Vrh, Kocka, Crtac */
 
 /** KONFIG **/
 
@@ -23,23 +23,9 @@ const podloga = platno.getContext('2d')
 podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)'
 podloga.fillStyle = 'rgba(0, 150, 255, 0.3)'
 
-/** FUNKCIJE **/
+const crtac = new Crtac(platno)
 
-/* @param lica: niz nizova */
-const render = lica => {
-  podloga.clearRect(0, 0, sirina, visina)
-  for (let i = 0; i < lica.length; ++i) {
-    const lice = lica[i]
-    podloga.beginPath()
-    podloga.moveTo(lice[0].x, lice[0].y)
-    for (let j = 1; j < lice.length; ++j) {
-      podloga.lineTo(lice[j].x, lice[j].y)
-    }
-    podloga.closePath()
-    podloga.stroke()
-    podloga.fill()
-  }
-}
+/** FUNKCIJE **/
 
 const rotiraj = function (vrh, centar, pomakX, pomakY) {
   // koeficijenti za matricu rotacije
@@ -66,7 +52,7 @@ const pratiMisha = function (e) {
     rotiraj(kocka.vrhovi[i], centar, pomakX, pomakY)
   }
   azurirajMisha(e)
-  render(kocka.lica)
+  crtac.crtaLica(kocka.lica)
 }
 
 const pocniVuchu = function (e) {
@@ -81,12 +67,10 @@ const azurirajMisha = function (e) {
 
 /** EXEC **/
 
-render(kocka.lica)
+crtac.crtaLica(kocka.lica)
 
 /** EVENTS **/
 
 platno.addEventListener('mousedown', pocniVuchu)
-
 document.addEventListener('mousemove', pratiMisha)
-
 document.addEventListener('mouseup', () => mishStisnut = false)

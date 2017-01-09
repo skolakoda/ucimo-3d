@@ -1,4 +1,4 @@
-/* global Vrh */
+/* global Vrh, Crtac */
 
 /** KONFIG **/
 
@@ -26,17 +26,9 @@ const podloga = platno.getContext('2d')
 podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)'
 podloga.fillStyle = 'rgba(0, 150, 255, 0.3)'
 
-/** FUNKCIJE **/
+const crtac = new Crtac(platno)
 
-const render = vrhovi => {
-  podloga.clearRect(0, 0, sirina, visina)
-  podloga.beginPath()
-  podloga.moveTo(vrhovi[0].x, vrhovi[0].y)
-  for (var i = 0; i < vrhovi.length; i++) {
-    podloga.lineTo(vrhovi[i].x, vrhovi[i].y)
-  }
-  podloga.stroke()
-}
+/** FUNKCIJE **/
 
 const rotiraj = function (vrh, centar, pomakX, pomakY) {
   // koeficijenti za matricu rotacije
@@ -63,7 +55,7 @@ const pratiMisha = e => {
     rotiraj(vrhovi[i], centar, pomakX, pomakY)
   }
   azurirajMisha(e)
-  render(vrhovi)
+  crtac.crtaVrhove(vrhovi)
 }
 
 const pocniVuchu = function (e) {
@@ -78,12 +70,10 @@ const azurirajMisha = function (e) {
 
 /** EXEC **/
 
-render(vrhovi)
+crtac.crtaVrhove(vrhovi)
 
 /** EVENTS **/
 
 platno.addEventListener('mousedown', pocniVuchu)
-
 document.addEventListener('mousemove', pratiMisha)
-
 document.addEventListener('mouseup', () => mishStisnut = false)
