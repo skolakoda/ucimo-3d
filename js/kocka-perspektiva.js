@@ -1,4 +1,4 @@
-/* global Vrh2D, Vrh3D, Kocka */
+/* global Vrh2D, Vrh, Kocka */
 
 /** KONFIG **/
 
@@ -21,7 +21,7 @@ const podloga = platno.getContext('2d')
 podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)'
 podloga.fillStyle = 'rgba(0, 150, 255, 0.3)'
 
-const centar = new Vrh3D(0, platno.height / 2, 0)
+const centar = new Vrh(0, platno.height / 2, 0)
 const kocka = new Kocka(centar, visina / 2)
 
 /** FUNKCIJE **/

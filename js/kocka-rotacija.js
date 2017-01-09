@@ -1,4 +1,4 @@
-/* global Vrh3D, Kocka */
+/* global Vrh, Kocka */
 
 /** KONFIG **/
 
@@ -12,7 +12,7 @@ let mishStisnut = false
 
 /** INIT **/
 
-const centar = new Vrh3D(sirina / 2, visina / 2, 0)
+const centar = new Vrh(sirina / 2, visina / 2, 0)
 const kocka = new Kocka(centar, visina / 2)
 
 const platno = document.getElementById('canvas')
