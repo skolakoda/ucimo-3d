@@ -1,84 +1,109 @@
-/*** KONFIG ***/
+/* global Vrh2D, Vrh3D, Kocka */
 
-var zapamcenMishX = 0;
-var zapamcenMishY = 0;
-var mishStisnut = false;
-var perspektiva = 0; // ako je različito od nule pravi perspectivu
+/** KONFIG **/
 
-/*** INIT ***/
+let perspektiva = 0 // ako nije nula pravi perspectivu, inace ortogonalno
+let zapamcenMishX = 0
+let zapamcenMishY = 0
+let mishStisnut = false
 
-var platno = document.getElementById('canvas');
-platno.width = window.innerWidth;
-platno.height = window.innerHeight;
-var centarPlatnaX = platno.width / 2;
-var centarPlatnaY = platno.height / 2;
+/** INIT **/
 
-var podloga = platno.getContext('2d');
-podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-podloga.fillStyle = 'rgba(0, 150, 255, 0.3)';
+const platno = document.getElementById('canvas')
+platno.width = document.body.clientWidth
+platno.height = document.body.clientHeight
 
-var centarKocke = new Vrh3D(0, 11 * centarPlatnaY / 10, 0);
-var kocka = new Kocka(centarKocke, centarPlatnaY);
+const podloga = platno.getContext('2d')
+podloga.strokeStyle = 'rgba(0, 0, 0, 0.3)'
+podloga.fillStyle = 'rgba(0, 150, 255, 0.3)'
 
-render(kocka, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
+const centar = new Vrh3D(0, platno.height / 2, 0)
+const kocka = new Kocka(centar, platno.height / 2)
 
+/** FUNKCIJE **/
 
-/*** EVENTS ***/
+const projektuj = function (vrh3D, perspektiva) {
+  if (perspektiva === 0) return new Vrh2D(vrh3D.x, vrh3D.z)
+  var r = perspektiva / vrh3D.y
+  return new Vrh2D(r * vrh3D.x, r * vrh3D.z)
+}
 
-platno.addEventListener('mousedown', pocniVuchu);
+/* @param telo.stranice: niz nizova */
+const render = function (telo, platno, perspektiva) {
+  const podloga = platno.getContext('2d')
+  podloga.clearRect(0, 0, platno.width, 2 * platno.height / 2)
+  for (var i = 0; i < telo.stranice.length; ++i) {
+    var tekucaStranica = telo.stranice[i]
 
-document.addEventListener('mousemove', pratiMisha);
+    var vrh2D = projektuj(tekucaStranica[0], perspektiva)
+    podloga.beginPath()
+    podloga.moveTo(vrh2D.x + platno.width / 2, -vrh2D.y + platno.height / 2)
 
-document.addEventListener('mouseup', function () {
-  mishStisnut = false;
-});
+    for (var j = 1; j < tekucaStranica.length; ++j) {
+      vrh2D = projektuj(tekucaStranica[j], perspektiva)
+      podloga.lineTo(vrh2D.x + platno.width / 2, -vrh2D.y + platno.height / 2)
+    }
+    podloga.closePath()
+    podloga.stroke()
+    podloga.fill()
+  }
+}
 
-if (perspektiva) platno.addEventListener('DOMMouseScroll', zumiraj);
-
-
-/*** FUNKCIJE ***/
-
-function rotiraj(vrh3D, centar, ugaoVodoravno, ugaoUspravno) {
+const rotiraj = function (vrh3D, centar, ugaoVodoravno, ugaoUspravno) {
   // koeficijenti za matricu rotacije
-  var ct = Math.cos(ugaoVodoravno);
-  var st = Math.sin(ugaoVodoravno);
-  var cp = Math.cos(ugaoUspravno);
-  var sp = Math.sin(ugaoUspravno);
+  const ct = Math.cos(ugaoVodoravno)
+  const st = Math.sin(ugaoVodoravno)
+  const cp = Math.cos(ugaoUspravno)
+  const sp = Math.sin(ugaoUspravno)
 
   // rotacija
-  var x = vrh3D.x - centar.x;
-  var y = vrh3D.y - centar.y;
-  var z = vrh3D.z - centar.z;
+  const x = vrh3D.x - centar.x
+  const y = vrh3D.y - centar.y
+  const z = vrh3D.z - centar.z
 
-  vrh3D.x = ct * x - st * cp * y + st * sp * z + centar.x;
-  vrh3D.y = st * x + ct * cp * y - ct * sp * z + centar.y;
-  vrh3D.z = sp * y + cp * z + centar.z;
+  vrh3D.x = ct * x - st * cp * y + st * sp * z + centar.x
+  vrh3D.y = st * x + ct * cp * y - ct * sp * z + centar.y
+  vrh3D.z = sp * y + cp * z + centar.z
 }
 
-function pratiMisha(evt) {
-  if (!mishStisnut) return;
+const pratiMisha = function (event) {
+  if (!mishStisnut) return
 
-  var ugaoVodoravno = (evt.clientX - zapamcenMishX) * Math.PI / 360;
-  var ugaoUspravno = (evt.clientY - zapamcenMishY) * Math.PI / 180;
-  for (var i = 0; i < kocka.vrhovi.length; ++i) {
-    rotiraj(kocka.vrhovi[i], centarKocke, ugaoVodoravno, ugaoUspravno);
+  const ugaoVodoravno = (event.clientX - zapamcenMishX) * Math.PI / 360
+  const ugaoUspravno = (event.clientY - zapamcenMishY) * Math.PI / 180
+  for (let i = 0; i < kocka.vrhovi.length; ++i) {
+    rotiraj(kocka.vrhovi[i], centar, ugaoVodoravno, ugaoUspravno)
   }
-  azurirajMisha(evt);
-  render(kocka, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
+  azurirajMisha(event)
+  render(kocka, platno, perspektiva)
 }
 
-function pocniVuchu(evt) {
-  azurirajMisha(evt);
-  mishStisnut = true;
+const pocniVuchu = function (event) {
+  azurirajMisha(event)
+  mishStisnut = true
 }
 
-function azurirajMisha(evt) {
-  zapamcenMishX = evt.clientX;
-  zapamcenMishY = evt.clientY;
+const azurirajMisha = function (event) {
+  zapamcenMishX = event.clientX
+  zapamcenMishY = event.clientY
 }
 
-function zumiraj(evt) {
-  evt.preventDefault();
-  perspektiva -= evt.detail;
-  render(kocka, podloga, centarPlatnaX, centarPlatnaY, perspektiva);
+const zumiraj = function (event) {
+  event.preventDefault()
+  perspektiva -= event.detail
+  render(kocka, platno, perspektiva)
 }
+
+/** EXEC **/
+
+render(kocka, platno, perspektiva)
+
+/** EVENTS **/
+
+platno.addEventListener('mousedown', pocniVuchu)
+
+document.addEventListener('mousemove', pratiMisha)
+
+document.addEventListener('mouseup', () => mishStisnut = false)
+
+if (perspektiva) platno.addEventListener('DOMMouseScroll', zumiraj)
